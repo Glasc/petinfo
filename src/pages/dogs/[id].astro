@@ -2,13 +2,16 @@
 import Layout from "../../layouts/Layout.astro";
 import type { Dog } from "../../types";
 
-type Paths = {
+type Path = {
   params: { id: string };
-  props: Pick<Dog, "name" | "temperament" | "life_span" | "image">;
-}[];
+  props: Pick<
+    Dog,
+    "name" | "temperament" | "life_span" | "image" | "bred_for" | "weight"
+  >;
+};
 
-export async function getStaticPaths(): Promise<Paths> {
-  const url = `https://api.thedogapi.com/v1/breeds`;
+export async function getStaticPaths(): Promise<Path[]> {
+  const url = `${import.meta.env.URL_BASE}/v1/breeds?limit=10`;
   const response = await fetch(url, {
     headers: { "x-api-key": import.meta.env.API_KEY },
   });
@@ -22,9 +25,11 @@ export async function getStaticPaths(): Promise<Paths> {
   return paths;
 }
 
+type Props = Path["props"];
+
 const { id } = Astro.params;
 
-const props = Astro.props;
+const { bred_for, image, life_span, name, temperament, weight } = Astro.props;
 ---
 
 <Layout title={`Pet ${id}`}>
@@ -39,17 +44,21 @@ const props = Astro.props;
       class="flex flex-col items-center space-y-4 bg-purple-100 p-12 rounded-lg"
     >
       <div class="flex flex-col items-center">
-        <img
-          src={props.image?.url}
-          alt={props.name}
-          class="w-64 h-64 rounded-full mb-4"
-        />
-        <h1 class="text-2xl font-bold">{props.name}</h1>
-        <p class="text-gray-500">{props.temperament}</p>
+        <img src={image?.url} alt={name} class="w-64 h-64 rounded-full mb-4" />
+        <h1 class="text-2xl font-bold">{name}</h1>
+        <p class="text-gray-500">{temperament}</p>
       </div>
       <div class="flex flex-col items-center">
         <h2 class="text-xl font-bold">Life Span</h2>
-        <p class="text-gray-500">{props.life_span}</p>
+        <p class="text-gray-500">{life_span}</p>
+      </div>
+      <div class="flex flex-col items-center">
+        <h2 class="text-xl font-bold">Nice for</h2>
+        <p class="text-gray-500">{bred_for}</p>
+      </div>
+      <div class="flex flex-col items-center">
+        <h2 class="text-xl font-bold">Weight</h2>
+        <p class="text-gray-500">{weight} pounds</p>
       </div>
     </div>
   </main>

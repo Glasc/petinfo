@@ -3,7 +3,7 @@ import { Card } from "../components/Card";
 import Layout from "../layouts/Layout.astro";
 import type { Dog } from "../types";
 
-const url = "https://api.thedogapi.com/v1/breeds";
+const url = `${import.meta.env.URL_BASE}/v1/breeds?limit=10`;
 
 const res = await fetch(url, {
   headers: {
