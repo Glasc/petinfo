@@ -11,7 +11,7 @@ type Path = {
 };
 
 export async function getStaticPaths(): Promise<Path[]> {
-  const url = `${import.meta.env.URL_BASE}/v1/breeds?limit=10`;
+  const url = `${import.meta.env.URL_BASE}/v1/breeds?limit=25`;
   const response = await fetch(url, {
     headers: { "x-api-key": import.meta.env.API_KEY },
   });
@@ -58,7 +58,7 @@ const { bred_for, image, life_span, name, temperament, weight } = Astro.props;
       </div>
       <div class="flex flex-col items-center">
         <h2 class="text-xl font-bold">Weight</h2>
-        <p class="text-gray-500">{weight} pounds</p>
+        <p class="text-gray-500">{weight?.metric} pounds</p>
       </div>
     </div>
   </main>
