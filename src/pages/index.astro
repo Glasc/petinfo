@@ -1,0 +1,41 @@
+---
+import { Card } from "../components/Card";
+import Layout from "../layouts/Layout.astro";
+import type { Dog } from "../types";
+
+const url = "https://api.thedogapi.com/v1/breeds";
+
+const res = await fetch(url, {
+  headers: {
+    "x-api-key": import.meta.env.API_KEY,
+  },
+});
+const data: Dog[] = (await res.json()) as Dog[];
+
+const pets = data;
+---
+
+<Layout title="Welcome to Astro.">
+  <main class="w-full space-y-6 pt-6 px-8">
+    <h1 class="text-5xl font-bold text-gray-800 text-center py-2">
+      These are my pets
+    </h1>
+    <section class="flex flex-wrap gap-4 justify-between">
+      {
+        pets?.map((pet) => {
+          return (
+            <Card
+              id={pet.id}
+              src={pet?.image.url}
+              title={pet?.name}
+              description={pet?.temperament}
+              client:load
+            />
+          );
+        })
+      }
+    </section>
+  </main>
+</Layout>
+
+<style></style>

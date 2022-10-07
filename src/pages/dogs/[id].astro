@@ -1,0 +1,58 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import type { Dog } from "../../types";
+
+type Paths = {
+  params: { id: string };
+  props: Pick<Dog, "name" | "temperament" | "life_span" | "image">;
+}[];
+
+export async function getStaticPaths(): Promise<Paths> {
+  const url = `https://api.thedogapi.com/v1/breeds`;
+  const response = await fetch(url, {
+    headers: { "x-api-key": import.meta.env.API_KEY },
+  });
+  const data: Dog[] = await response.json();
+
+  const paths = data.map((breed: Dog) => ({
+    params: { id: breed?.id.toString() },
+    props: { ...breed },
+  }));
+
+  return paths;
+}
+
+const { id } = Astro.params;
+
+const props = Astro.props;
+---
+
+<Layout title={`Pet ${id}`}>
+  <main class="w-full space-y-6 pt-6 px-6 max-w-3xl mx-auto">
+    <!-- goback button daisyui -->
+    <a href="/">
+      <button class="btn btn-primary btn-outline btn-sm self-start"
+        >{"< "}Go back</button
+      >
+    </a>
+    <div
+      class="flex flex-col items-center space-y-4 bg-purple-100 p-12 rounded-lg"
+    >
+      <div class="flex flex-col items-center">
+        <img
+          src={props.image?.url}
+          alt={props.name}
+          class="w-64 h-64 rounded-full mb-4"
+        />
+        <h1 class="text-2xl font-bold">{props.name}</h1>
+        <p class="text-gray-500">{props.temperament}</p>
+      </div>
+      <div class="flex flex-col items-center">
+        <h2 class="text-xl font-bold">Life Span</h2>
+        <p class="text-gray-500">{props.life_span}</p>
+      </div>
+    </div>
+  </main>
+</Layout>
+
+<style></style>
