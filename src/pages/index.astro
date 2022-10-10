@@ -25,7 +25,7 @@ const pets = data;
         pets?.map((pet) => {
           return (
             <Card
-              id={pet.id}
+              id={pet?.id}
               src={pet?.image.url}
               title={pet?.name}
               description={pet?.temperament}

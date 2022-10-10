@@ -1,3 +1,5 @@
+import prefetch from "@astrojs/prefetch/dist/client";
+
 type CardProps = {
   id: number;
   alt?: string;
@@ -23,7 +25,7 @@ export const Card = ({
           <h2 className="card-title">{title}</h2>
           <p>{description}</p>
           <div className="card-actions justify-end">
-            <a href={`/dogs/${id}/`}>
+            <a href={`/dogs/${id}/`} rel="prefetch">
               <button className="btn btn-primary">Details</button>
             </a>
           </div>
